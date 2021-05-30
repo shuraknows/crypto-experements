@@ -9,10 +9,16 @@ class Block {
         this.nonce = 0;
     }
 
+    /**
+     * @returns {string}
+     */
     calculateHash() {
         return SHA256(this.previousHash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).toString();
     }
 
+    /**
+     * @param {numeric} difficultly
+     */
     mineBlock(difficultly) {
         while (this.hash.substring(0, difficultly) !== Array(difficultly + 1).join("0")) {
             this.nonce++;
@@ -20,6 +26,9 @@ class Block {
         }
     }
 
+    /**
+     * @returns {boolean}
+     */
     hasValidTransactions() {
         for (const transaction of this.transactions) {
             if (!transaction.isValid()) {

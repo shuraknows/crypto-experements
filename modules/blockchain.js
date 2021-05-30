@@ -9,14 +9,23 @@ class Blockchain {
         this.miningReward = 100;
     }
 
+    /**
+     * @returns {Block}
+     */
     createGenesisBlock() {
         return new Block("01/01/2021", [], "0");
     }
 
+    /**
+     * @returns {Block}
+     */
     getLatestBlock() {
         return this.chain[this.chain.length - 1];
     }
 
+    /**
+     * @param {string} miningRewardAddress
+     */
     minePendingTransaction(miningRewardAddress) {
         let block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
         block.mineBlock(this.diffuculty);
@@ -28,6 +37,9 @@ class Blockchain {
         ];
     }
 
+    /**
+     * @param {Transaction} transaction
+     */
     addTransaction(transaction) {
         if (!transaction.fromAddress || !transaction.toAddress) {
             throw new Error('Transaction must have from and to address');
@@ -40,9 +52,13 @@ class Blockchain {
         this.pendingTransactions.push(transaction);
     }
 
+    /**
+     * @param {string} address
+     *
+     * @returns {number}
+     */
     getBalanceOfAddress(address) {
         let balance = 0;
-
 
         for (const block of this.chain) {
             for (const transaction of block.transactions) {
@@ -59,6 +75,9 @@ class Blockchain {
         return balance;
     }
 
+    /**
+     * @returns {boolean}
+     */
     isChainValid() {
         for (let i = 1; i < this.chain.length; i++) {
             const currentBlock = this.chain[i];

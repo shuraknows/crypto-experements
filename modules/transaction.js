@@ -3,7 +3,11 @@ const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 
 class Transaction {
-    // from address is public key!
+    /**
+     * @param {string} fromAddress
+     * @param {string} toAddress
+     * @param {number} amount
+     */
     constructor(fromAddress, toAddress, amount) {
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
@@ -15,6 +19,9 @@ class Transaction {
         return SHA256(this.fromAddress + this.toAddress + this.amount).toString();
     }
 
+    /**
+     * @param {KeyPair} signingPrivateKey
+     */
     signTransaction(signingPrivateKey) {
         if (signingPrivateKey.getPublic('hex') !== this.fromAddress) {
             throw new Error('You cannot sign transactions for other wallets');
@@ -25,6 +32,9 @@ class Transaction {
         this.signature = signature.toDER('hex');
     }
 
+    /**
+     * @returns {boolean}
+     */
     isValid() {
         if (this.fromAddress === null) {
             return true;
